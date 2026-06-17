@@ -45,6 +45,11 @@ pub const Scheduler = struct {
     }
 
     pub fn deinit(self: *Scheduler) void {
+        var iter = self.tasks.iterator();
+        while (iter.next_ptr()) |task| {
+          task.frame.deinit(self.allocator);
+        }
+        
         self.tasks.deinit();
         self.released.deinit(self.allocator);
         self.triggers.deinit(self.allocator);
